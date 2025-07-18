@@ -25,7 +25,7 @@ stage('Checkout') {
         stage('Docker Build') {
             steps {
                 echo '🐳 Building Docker image...'
-                bat 'docker build -t ecommerce-app:latest .'
+                sh 'docker build -t ecommerce-app:latest .'
             }
         }
     }
