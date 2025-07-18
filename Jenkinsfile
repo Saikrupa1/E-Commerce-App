@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Saikrupa1/E-Commerce-App.git'
-            }
-        }
+stage('Checkout') {
+    steps {
+        git branch: 'main', url: 'https://github.com/Saikrupa1/E-Commerce-App.git'
+    }
+}
 
         stage('Build') {
             steps {
