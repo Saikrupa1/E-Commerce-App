@@ -2,31 +2,34 @@ pipeline {
     agent any
 
     stages {
-stage('Checkout') {
-    steps {
-        git branch: 'main', url: 'https://github.com/Saikrupa1/E-Commerce-App.git'
+        stage('Checkout') {
+            steps {
+                echo '📥 Cloning repository...'
+                git branch: 'main', url: 'https://github.com/Saikrupa1/E-Commerce-App.git'
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                echo '🔧 Building and testing app inside Docker...'
+                sh 'docker build --target build-stage -t ecommerce-app-builder .'
+            }
+        }
+
+        stage('Build Production Image') {
+            steps {
+                echo '🐳 Building production Docker image...'
+                sh 'docker build -t ecommerce-app:latest .'
+            }
+        }
     }
-}
 
-        stage('Build') {
-            steps {
-                echo '🔧 Building application...'
-                // Example: npm install or python setup
-            }
+    post {
+        success {
+            echo '✅ Pipeline completed successfully!'
         }
-
-        stage('Test') {
-            steps {
-                echo '🧪 Running tests...'
-                // Example: npm test or pytest
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                echo '🐳 Building Docker image...'
-                bat 'docker build -t ecommerce-app:latest .'
-            }
+        failure {
+            echo '❌ Pipeline failed. Check console logs for errors.'
         }
     }
 }
