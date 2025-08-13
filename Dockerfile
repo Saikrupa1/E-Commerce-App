@@ -1,30 +1,21 @@
-# Stage 1: Build and Test
-FROM node:18 AS build-stage
+# Stage 1: Build stage
+FROM python:3.12-slim AS build-stage
 
 WORKDIR /app
 
-# Copy only frontend package.json for caching
-COPY client/package*.json ./ 
+# Copy dependencies first (for caching)
+COPY requirements.txt .
 
-# Install dependencies
-RUN npm install
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all frontend source code
-COPY client/. .
+# Copy application code
+COPY . .
 
-# Run tests in CI mode
-RUN npm test -- --watchAll=false --ci
+# Run tests (optional)
+RUN pytest tests/
 
-# Build React app
-RUN npm run build
-
-# Stage 2: Production nginx image
-FROM nginx:alpine
-
-# Copy build files from previous stage
-COPY --from=build-stage /app/build /usr/share/nginx/html
-
-# Expose port 5000
+# Expose port
 EXPOSE 5000
 
-CMD ["nginx", "-g", "daemon off;"]
+# Command to run app
+CMD ["python", "app.py"]
