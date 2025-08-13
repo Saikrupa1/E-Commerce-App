@@ -12,14 +12,14 @@ pipeline {
         stage('Build & Test') {
             steps {
                 echo '🔧 Building and testing app inside Docker...'
-                sh 'docker build --target build-stage -t ecommerce-app-builder .'
+                bat 'docker build --target build-stage -t ecommerce-app-builder .'
             }
         }
 
         stage('Build Production Image') {
             steps {
                 echo '🐳 Building production Docker image...'
-                sh 'docker build -t ecommerce-app:latest .'
+                bat 'docker build -t ecommerce-app:latest .'
             }
         }
     }
