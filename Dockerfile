@@ -1,18 +1,20 @@
 # Stage 1: Build and Test
 FROM node:18 AS build-stage
 
+# Set working directory inside container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if exists)
-COPY package*.json ./
+# Copy only package.json and package-lock.json first for caching
+# Adjust path if your package.json is in a subfolder, e.g., frontend/package*.json
+COPY frontend/package*.json ./ 
 
 # Install dependencies
 RUN npm install
 
-# Copy all source code
-COPY . .
+# Copy the rest of the source code
+COPY frontend/. .
 
-# Run tests (CI mode, no watch)
+# Run tests in CI mode
 RUN npm test -- --watchAll=false --ci
 
 # Build React app for production
@@ -27,4 +29,5 @@ COPY --from=build-stage /app/build /usr/share/nginx/html
 # Expose port 5000
 EXPOSE 5000
 
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
