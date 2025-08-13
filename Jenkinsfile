@@ -11,15 +11,25 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                echo '🔧 Building and testing app inside Docker...'
-                bat 'docker build --target build-stage -t ecommerce-app-builder .'
+                script {
+                    if (isUnix()) {
+                        sh 'docker build --target build-stage -t ecommerce-app-builder .'
+                    } else {
+                        bat 'docker build --target build-stage -t ecommerce-app-builder .'
+                    }
+                }
             }
         }
 
         stage('Build Production Image') {
             steps {
-                echo '🐳 Building production Docker image...'
-                bat 'docker build -t ecommerce-app:latest .'
+                script {
+                    if (isUnix()) {
+                        sh 'docker build -t ecommerce-app:latest .'
+                    } else {
+                        bat 'docker build -t ecommerce-app:latest .'
+                    }
+                }
             }
         }
     }
