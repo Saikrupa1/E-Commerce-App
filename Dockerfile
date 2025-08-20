@@ -11,11 +11,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Set PYTHONPATH so Python can find your app package
+ENV PYTHONPATH=/app
+
 # Run tests (optional)
 RUN pytest tests/
 
 # Expose port
 EXPOSE 5000
 
-# Command to run app
-CMD ["python", "app.py"]
+# Command to run app, assuming your Flask (or similar) app object is named `app` in app/__init__.py
+CMD ["python", "-m", "app"]
