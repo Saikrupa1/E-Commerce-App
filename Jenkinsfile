@@ -10,6 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Saikrupa1/E-Commerce-App.git'
+            }
         }
 
         stage('Build Docker Image') {
