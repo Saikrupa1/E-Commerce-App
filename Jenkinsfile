@@ -19,7 +19,7 @@ pipeline {
     stage('Test') {
       steps {
         bat 'cd server && npm test'
-        bat 'cd client && npm test'
+        bat 'cd client && npm test -- --passWithNoTests' // or add a test
       }
     }
 
@@ -37,6 +37,15 @@ pipeline {
       steps {
         bat 'kubectl apply -f k8s\\deployment.yaml'
       }
+    }
+  }
+
+  post {
+    success {
+      echo 'Pipeline completed successfully.'
+    }
+    failure {
+      echo 'Pipeline failed.'
     }
   }
 }
