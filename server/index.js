@@ -1,4 +1,3 @@
-// server/index.js
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -16,6 +15,12 @@ app.get("/api/products", (req, res) => {
   res.json(products);
 });
 
-app.listen(5000, () => {
-  console.log("API running on http://localhost:5000");
-});
+// Export the app for testing
+module.exports = app;
+
+// Start server only if this file is run directly
+if (require.main === module) {
+  app.listen(5000, () => {
+    console.log("API running on http://localhost:5000");
+  });
+}
