@@ -1,5 +1,6 @@
 pipeline {
   agent any
+
   stages {
     stage('Build') {
       steps {
@@ -7,12 +8,21 @@ pipeline {
         bat 'docker build -t your-dockerhub-username/ecommerce-frontend:latest .\\client'
       }
     }
+
+    stage('Install Dependencies') {
+      steps {
+        bat 'cd server && npm install'
+        bat 'cd client && npm install'
+      }
+    }
+
     stage('Test') {
       steps {
         bat 'cd server && npm test'
         bat 'cd client && npm test'
       }
     }
+
     stage('Push') {
       steps {
         withCredentials([string(credentialsId: 'dockerhub-pw', variable: 'DOCKER_PASSWORD')]) {
@@ -22,6 +32,7 @@ pipeline {
         }
       }
     }
+
     stage('Deploy to Kubernetes') {
       steps {
         bat 'kubectl apply -f k8s\\deployment.yaml'
